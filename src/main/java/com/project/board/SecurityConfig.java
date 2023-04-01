@@ -14,16 +14,16 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    
+
     // 스프링 빈을 만드는 방법 2가지
     // component는 setter 나 builder 등을 통해 사용자가 특정값을 변경해서 생성한 인스턴스를 스프링에게 관리하라고 맡김
     // 1) 개발자가 직접 컨트롤이 가능한 내부 클래스에서 사용가능
     // 2) class 에서만 선언 가능한 어노테이션이다
-    
+
     // @Bean 클래스를 스프링한테 알아서 인스턴스를 생성한 후에 등록하라고 맡기는 것
     // 1) 개발자가 컨트롤이 불가능한 외부 라이브러리 사용시 사용
     // 2) 메서드단에도 붙일 수 있고, 이 때 클래스에는 @Configuration을 붙여줘야 함
-    
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         // 암호화 모듈을 우리 프로젝트의 스프링에 빈으로 주입하는 것

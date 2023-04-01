@@ -1,6 +1,7 @@
 package com.project.board.author.service;
 
 import com.project.board.author.domain.Author;
+import com.project.board.author.repository.AuthorMapper;
 import com.project.board.author.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -22,25 +23,27 @@ public class AuthorService implements UserDetailsService {
     // SecurityConfig에서 만들어 놓은 스프링빈을 여기에 주입시키는 것
     private final AuthorRepository authorRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthorMapper authorMapper;
     @Autowired
-    public AuthorService(AuthorRepository authorRepository, PasswordEncoder passwordEncoder) {
+    public AuthorService(AuthorRepository authorRepository, AuthorMapper authorMapper, PasswordEncoder passwordEncoder) {
         this.authorRepository = authorRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authorMapper = authorMapper;
     }
 
     public List<Author> findAll() {
-        return authorRepository.findAll();
+        return authorMapper.findAll();
     }
 
     public void save(Author author){
-        authorRepository.save(author);
+        authorMapper.save(author);
         // 이 시점에서는 save가 완료되지 않음, 모든 메서드가 완려되어야 commit이 됨
         // author.password = encode(author.password)
         author.encodePassword(passwordEncoder);
     }
 
     public Author findByEmail(String email){
-        return authorRepository.findByEmail(email).orElse(null);
+        return authorMapper.findByEmail(email).orElse(null);
     }
 
     public Optional<Author> findById(Long id) throws Exception {
@@ -51,7 +54,7 @@ public class AuthorService implements UserDetailsService {
 //            throw new Exception("Not Found Exception");
 //        }
 
-        return authorRepository.findById(id);
+        return authorMapper.findById(id);
     }
 
     public List<Author> findAllFetchJoin(){
@@ -64,7 +67,7 @@ public class AuthorService implements UserDetailsService {
         // 로그인 할 때 입력한 email이 DB에 있는지 없는지 확인 먼저 한 후 있다면 밑에 return 단으로 넘어가서
         // 존재하는 해당 유저의 email과 password를 스프링에게 알려준다
         // 그래야 스프링이 로그인할 때 맞는지 비교할 데이터가 주어지는 것이니까
-        Author author = authorRepository.findByEmail(username)
+        Author author = authorMapper.findByEmail(username)
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 Email입니다."));
         // doLogin을 할 때 스프링이 사용자가 입력한 email을 DB에서 조회하여 가져온 author와
         // 사용자가 입력한 password를 비교할 수 있도록 author.getEmail(), author.getPassword() 을 리턴하는 것

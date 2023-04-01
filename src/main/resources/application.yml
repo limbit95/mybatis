@@ -1,11 +1,18 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3300/board?useSSL=false&allowPublicKeyRetrieval=true
+    jdbc-url: jdbc:mysql://localhost:3300/board?useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: test1234
+#    mapper.xml 파일의 위치 설정
+    mapper-locations: classpath:/mapper/**/*.xml
+
   jpa:
 #    show-sql: true
+#    mybatis와 jpa를 같이 쓰기 위해 추가적으로 database가 무엇인지, database-platform이 무엇인지
+#    jpa 설정에 추가 설정 해주어야 함
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: update
     properties:
